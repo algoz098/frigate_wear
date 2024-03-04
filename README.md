@@ -1,16 +1,29 @@
 # frigate_wear
 
-A new Flutter project.
+This project aims to allow to see cameras from a [NVR Frigate](https://github.com/blakeblackshear/frigate) which it's is own project.
+
+This was built in flutter, and is limited.
+
+## Help wanted
+
+We can implement extra features, and all help is welcome.
+
+## Requirements
+
+An Frigate NVR: https://github.com/blakeblackshear/frigate
+An Android Wear device or a Android Wear VM
+Android Studio
+Flutter SDK
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Create a Frigate NVR accessable
+See: https://github.com/blakeblackshear/frigate
 
-A few resources to get you started if this is your first Flutter project:
+Clone the repo
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Open your terminal.
+2. Clone the repository using `git clone https://github.com/algoz098/frigate_wear.git`.
+3. Navigate to the cloned repository using `cd frigate_wear`.
+4. Run `flutter pub get` to fetch the dependencies.
+5. Start the application using `flutter run`.
