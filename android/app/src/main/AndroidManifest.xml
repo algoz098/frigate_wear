@@ -2,7 +2,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:label="frigate_wear"
+        android:label="Frigate Wear"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

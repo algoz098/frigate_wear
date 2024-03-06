@@ -5,14 +5,25 @@ import 'dart:async';
 import 'model/api_model.dart';
 
 class Jsmpeg extends StatefulWidget {
-  Jsmpeg({Key? key}) : super(key: key);
+  final int height;
+  final String baseUrl;
+  final String? cameraName;
+  final bool? disabled;
+
+  Jsmpeg(
+      {Key? key,
+      required this.height,
+      required this.baseUrl,
+      this.cameraName,
+      this.disabled})
+      : super(key: key);
 
   @override
   _JsmpegState createState() => _JsmpegState();
 }
 
 class _JsmpegState extends State<Jsmpeg> {
-  String baseUrl = '';
+  String cameraUrl = '';
   String imageUrl = '';
   bool loaded = false;
   String previousImageUrl = '';
@@ -22,16 +33,19 @@ class _JsmpegState extends State<Jsmpeg> {
 
   getImgUrl() async {
     try {
-      final apiModel = context.read<ApiModel>();
-      String currentBaseUrl = await apiModel.getCurrentBaseUrl();
-      baseUrl =
-          '$currentBaseUrl/api/${apiModel.activeCamera}/latest.jpg?h=$screenHeight';
-      imageUrl = '$baseUrl&counter=$counter';
+      cameraUrl =
+          '${widget.baseUrl}/${widget.cameraName}/latest.jpg?h=$screenHeight';
+      imageUrl = '$cameraUrl&counter=$counter';
       debugPrint('imageUrl: $imageUrl');
-      loaded = true;
+      setState(() {
+        loaded = true;
+      });
       return imageUrl;
     } catch (e) {
-      loaded = true;
+      setState(() {
+        loaded = true;
+      });
+
       throw e;
     }
   }
@@ -39,25 +53,22 @@ class _JsmpegState extends State<Jsmpeg> {
   @override
   void initState() {
     super.initState();
-    final apiModel = context.read<ApiModel>();
-
-    debugPrint('External URL: ${apiModel.externalUrl}');
-    if (apiModel.externalUrl.isEmpty) {
-      return;
-    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       screenHeight = MediaQuery.of(context).size.height.toInt();
       debugPrint('Screen height: $screenHeight');
     });
     getImgUrl();
-    _timer =
-        Timer.periodic(const Duration(seconds: 1), (Timer t) => _updateImage());
+    _timer = Timer.periodic(
+        const Duration(milliseconds: 500), (Timer t) => _updateImage());
   }
 
   void _updateImage() async {
-    var apiModel = context.read<ApiModel>();
-    if (apiModel.activeCamera.isEmpty) {
+    if (widget.cameraName == null) {
+      return;
+    }
+
+    if (widget.disabled == true) {
       return;
     }
 
@@ -78,34 +89,7 @@ class _JsmpegState extends State<Jsmpeg> {
 
   @override
   Widget build(BuildContext context) {
-    final apiModel = context.read<ApiModel>();
-
-    if (!apiModel.loaded || !loaded) {
-      return const Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
-    if (baseUrl.isEmpty) {
-      return const Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            // Add a Text widget here (101 lines)
-            child: Text(
-              'Please set the external URL in the settings (tap on the screen to see it)',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-      );
-    }
-
-    if (apiModel.activeCamera.isEmpty) {
+    if (widget.cameraName == null) {
       return const Scaffold(
         backgroundColor: Colors.black,
         body: Center(
